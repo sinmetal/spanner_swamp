@@ -2,7 +2,8 @@ package spanner_swamp_test
 
 import (
 	"context"
-	"math/rand"
+	"hash/crc32"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -16,11 +17,15 @@ import (
 )
 
 func TestShardingSampleStore_Insert(t *testing.T) {
+	if os.Getenv("SPANNER_EMULATOR_HOST") == "" {
+		t.SkipNow()
+	}
+
 	ctx := context.Background()
 	s := newShardingSampleStore(t)
 
 	id := strings.ReplaceAll(uuid.New().String(), "-", "")
-	shardID := rand.Int63n(10)
+	shardID := int64(crc32.ChecksumIEEE([]byte(id)))
 	got, err := s.Insert(ctx, &models.ShardingSample{
 		ShardingSampleID: id,
 		ShardID:          shardID,

@@ -19,7 +19,7 @@ CREATE TABLE UserAccessLogs2 (
   LastAccess TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp = true),
 ) PRIMARY KEY (UserID, LastAccess DESC);
 
-# 全UserのAccessLogを並べたいなら、Shardingするのが無難
+# 全UserのAccessLogを並べたいなら、Shardingする必要が出てくることがある
 CREATE TABLE UserAccessLogs3 (
   ShardID INT64 NOT NULL,
   LastAccess TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp = true),
