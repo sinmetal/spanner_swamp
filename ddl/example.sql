@@ -7,6 +7,19 @@ CREATE TABLE Users (
   UpdatedAt TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp = true),
 ) PRIMARY KEY (UserID);
 
+CREATE INDEX UsersByMailAddress
+  ON Users (
+    MailAddress,
+);
+
+CREATE TABLE UserSecretInfos (
+  UserID STRING(32) NOT NULL,
+  Address STRING(1024),
+  CreatedAt TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp = true),
+  UpdatedAt TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp = true),
+) PRIMARY KEY(UserID),
+  INTERLEAVE IN PARENT Users ON DELETE CASCADE;
+
 # 全UserのAccessLogを並べるのは不安がある
 CREATE TABLE UserAccessLogs1 (
   LastAccess TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp = true),
